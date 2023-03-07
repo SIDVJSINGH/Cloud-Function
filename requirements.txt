@@ -1,0 +1,4 @@
+google-cloud-bigquery
+Flask==2.0.2
+cython
+pandas
