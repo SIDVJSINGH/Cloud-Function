@@ -1,0 +1,30 @@
+SQL for calls and meeting join:
+SELECT m.employee_id as employee_id,  m.employee_name as employee_name,c.from as calls_from, c.to as calls_to,c.duration as calls_duration,m.meeting_organiser as meeting_organizer,m.meeting_attendees as meeting_attendees,FROM calcium-sunbeam-341614.flat_data_poc.meetings_flat m LEFT JOIN calcium-sunbeam-341614.flat_data_poc.calls_flat c ON m.company_id = c.employee_id LIMIT 10;
+
+Query for Landline data count:
+SELECT COUNT(phone_type) as Landline FROM calcium-sunbeam-341614.flat_data_poc.calls_flat where phone_type = 'Landline';
+
+Query for Mobile data count:
+SELECT COUNT(phone_type) as Mobile FROM calcium-sunbeam-341614.flat_data_poc.calls_flat where phone_type = 'Mobile';
+
+Query for all data count:
+SELECT COUNT(phone_type) as Total_calls FROM calcium-sunbeam-341614.flat_data_poc.calls_flat;
+
+all 3:
+SELECT SUM(CASE WHEN phone_type = 'Landline' THEN 1 ELSE 0 END) as Landline, SUM(CASE WHEN phone_type = 'Mobile' THEN 1 ELSE 0 END) as Mobile,COUNT(phone_type) as Total_Calls FROM calcium-sunbeam-341614.flat_data_poc.calls_flat;
+
+inbound,outbound:
+FOR LANDLINE:
+SELECT SUM(CASE WHEN inbound_outbound = 'inbound' THEN 1 ELSE 0 END) as Inbound, SUM(CASE WHEN inbound_outbound = 'outbound' THEN 1 ELSE 0 END) as Outbound, FROM calcium-sunbeam-341614.flat_data_poc.calls_flat WHERE phone_type = 'Landline';
+FOR MOBILE:
+SELECT SUM(CASE WHEN inbound_outbound = 'inbound' THEN 1 ELSE 0 END) as Inbound, SUM(CASE WHEN inbound_outbound = 'outbound' THEN 1 ELSE 0 END) as Outbound, FROM calcium-sunbeam-341614.flat_data_poc.calls_flat WHERE phone_type = 'Mobile’;
+FOR Total:
+SELECT SUM(CASE WHEN inbound_outbound = 'inbound' THEN 1 ELSE 0 END) as Inbound, SUM(CASE WHEN inbound_outbound = 'outbound' THEN 1 ELSE 0 END) as Outbound, FROM calcium-sunbeam-341614.flat_data_poc.calls_flat;
+
+1 day of data for calls:
+SELECT SUM(CASE WHEN call_type='Unknown' THEN 1 ELSE 0 END) as Unknown_Calls,SUM(CASE WHEN call_type='Known' THEN 1 ELSE 0 END) as Known_Calls,SUM(CASE WHEN call_type='Internal' THEN 1 ELSE 0 END) as Internal_Calls FROM calcium-sunbeam-341614.flat_data_poc.calls_flat WHERE date_skey between 20220101 AND 20220102 # 1 day of data
+
+
+Distinct Employee with their total calls:
+SELECT DISTINCT(employee_name) as Employee,Count(call_type) as Number_of_Calls FROM calcium-sunbeam-341614.flat_data_poc.calls_flat GROUP BY Employee order by Number_of_Calls DESC
+
